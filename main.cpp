@@ -1,90 +1,85 @@
 #include <iostream>
 
 struct Node{
-    Node* next;
+    Node* previous;
     int value;
 };
 
-struct Queue{
-    Node* first;
+struct Stack{
     Node* last;
 };
 
-Queue constructor (){
-    Queue result;
-    result.first = nullptr;
+Stack constructor (){
+    Stack result;
     result.last = nullptr;
     return result;
 }
 
-void destructor (Queue& queue){
-    while (queue.first != queue.last){
+void destructor (Stack& stack){
+    while (stack.last != nullptr){
         Node* temp;
-        temp = queue.first;
-        queue.first = temp->next;
+        temp = stack.last;
+        stack.last = temp->previous;
         delete temp;
     }
-    queue.first = nullptr;
-    queue.last = nullptr;
 }
 
-void push (Queue& queue, int value){
-    if (queue.first == nullptr){
+void push (Stack& stack, int value){
+    if (stack.last == nullptr){
         Node *node = new Node;
-        queue.first = node;
-        queue.last = node;
-        node->next = nullptr;
+        node->previous = nullptr;
         node->value = value;
+        stack.last = node;
     } else {
         Node *node = new Node;
-        queue.last->next = node;
-        queue.last = node;
-        node->next = nullptr;
+        node->previous = stack.last;
         node->value = value;
+        stack.last = node;
     }
 }
 
-unsigned int size(const Queue& queue){
-    unsigned int counter = 1;
-    Node* iter = queue.first;
-    while (iter != queue.last){
+unsigned int size(const Stack& stack){
+    unsigned int counter = 0;
+    Node* iter = stack.last;
+    while (iter != nullptr){
         ++counter;
-        iter = iter->next;
+        iter = iter->previous;
     }
     return counter;
 }
 
-int pop(Queue& queue){
+int pop(Stack& stack){
     Node* temp;
-    temp = queue.first;
-    queue.first = temp->next;
+    temp = stack.last;
+    stack.last = temp->previous;
     int result = temp->value;
     delete temp;
     return result;
 }
 
-void print(const Queue& queue){
-    Node* iter = queue.first;
-    while (iter != queue.last){
+void print(const Stack& stack){
+    Node* iter = stack.last;
+    while (iter != nullptr){
         std::cout << iter->value << ' ';
-        iter = iter->next;
+        iter = iter->previous;
     }
-    std::cout << iter->value << std::endl;
+    std::cout << std::endl;
 }
+
 int main() {
-    Queue queue;
-    queue = constructor();
-    push(queue, 10);
-    push(queue, 20);
-    push(queue, 30);
-    push(queue, 40);
-    push(queue, 50);
-    print(queue);
-    std::cout << size(queue) << std::endl;
-    std::cout << pop(queue) << std::endl;
-    std::cout << pop(queue) << std::endl;
-    print(queue);
-    std::cout << size(queue) << std::endl;
-    destructor(queue);
+    Stack stack;
+    stack = constructor();
+    push(stack, 10);
+    push(stack, 20);
+    push(stack, 30);
+    push(stack, 40);
+    push(stack, 50);
+    print(stack);
+    std::cout << size(stack) << std::endl;
+    std::cout << pop(stack) << std::endl;
+    std::cout << pop(stack) << std::endl;
+    print(stack);
+    std::cout << size(stack) << std::endl;
+    destructor(stack);
     return 0;
 }
