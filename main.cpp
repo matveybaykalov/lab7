@@ -29,27 +29,26 @@ void destructor (Queue& queue){
 }
 
 void push (Queue& queue, int value){
+    Node *node = new Node;
     if (queue.first == nullptr){
-        Node *node = new Node;
         queue.first = node;
-        queue.last = node;
-        node->next = nullptr;
-        node->value = value;
     } else {
-        Node *node = new Node;
         queue.last->next = node;
-        queue.last = node;
-        node->next = nullptr;
-        node->value = value;
     }
+    queue.last = node;
+    node->next = nullptr;
+    node->value = value;
 }
 
 unsigned int size(const Queue& queue){
-    unsigned int counter = 1;
-    Node* iter = queue.first;
-    while (iter != queue.last){
-        ++counter;
-        iter = iter->next;
+    unsigned int counter = 0;
+    if (queue.first != nullptr) {
+        counter++;
+        Node *iter = queue.first;
+        while (iter != queue.last) {
+            ++counter;
+            iter = iter->next;
+        }
     }
     return counter;
 }
@@ -65,15 +64,16 @@ int pop(Queue& queue){
 
 void print(const Queue& queue){
     Node* iter = queue.first;
-    while (iter != queue.last){
+    while (iter != nullptr){
         std::cout << iter->value << ' ';
         iter = iter->next;
     }
-    std::cout << iter->value << std::endl;
+    std::cout << std::endl;
 }
 int main() {
     Queue queue;
     queue = constructor();
+    std::cout << size(queue) << std::endl;
     push(queue, 10);
     push(queue, 20);
     push(queue, 30);
